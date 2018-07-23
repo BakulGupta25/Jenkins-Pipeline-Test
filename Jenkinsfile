@@ -1,6 +1,5 @@
 pipeline {
   agent none
-
   options {
     buildDiscarder(logRotator(numToKeepStr: '2', artifactNumToKeepStr: '1'))
   }
@@ -27,7 +26,6 @@ pipeline {
        }
      } 
    }
-
     stage('deploy') {
       agent {
         label 'apache'
@@ -38,12 +36,20 @@ pipeline {
     }
     stage('running jar') {
       agent {
-        label 'apache'
+        label 'centos'
       }
       steps {
 	sh "cd ~"
         sh "wget http://13.229.90.200/rectangle/all/rectangle_${env.BUILD_NUMBER}.jar"
         sh "java -jar rectangle_${env.BUILD_NUMBER}.jar 4 5"
+      }
+    }
+    stage('promoting to green') {
+      agent {
+        label 'centos'
+      }
+      steps {
+        sh "cp /var/www/html/rectangle/all/rectangle_${env.BUILD_NUMBER}.jar /var/www/html/rectangle/green/"
       }
     }
   }
