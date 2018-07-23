@@ -36,7 +36,7 @@ pipeline {
     }
     stage('running jar') {
       agent {
-        label 'centos'
+        label 'apache'
       }
       steps {
 	sh "cd ~"
@@ -46,7 +46,7 @@ pipeline {
     }
     stage('promoting to green') {
       agent {
-        label 'centos'
+        label 'apache'
       }
       steps {
         sh "cp /var/www/html/rectangle/all/rectangle_${env.BUILD_NUMBER}.jar /var/www/html/rectangle/green/"
