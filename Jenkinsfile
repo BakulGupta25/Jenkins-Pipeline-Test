@@ -1,9 +1,16 @@
 pipeline {
   agent none
+<<<<<<< HEAD
 
   environment {
     MAJOR_VERSION = 1
   }
+=======
+  }
+  environment {
+    MAJOR_VERSION = 1
+  }
+>>>>>>> 798146813e58e0372fbc41955e03df371c5bb804
 
   stages {
     stage('Say Hello') {
@@ -53,6 +60,7 @@ pipeline {
         label 'apache'
       }
       steps {
+<<<<<<< HEAD
         sh "if ![ -d '/var/www/html/rectangles/all/${env.BRANCH_NAME}' ]; then mkdir /var/www/html/rectangles/all/${env.BRANCH_NAME}; fi"
         sh "cp dist/rectangle_${env.MAJOR_VERSION}.${env.BUILD_NUMBER}.jar /var/www/html/rectangles/all/${env.BRANCH_NAME}/"
       }
@@ -73,6 +81,10 @@ pipeline {
       steps {
         sh "wget http://brandon4231.mylabserver.com/rectangles/all/${env.BRANCH_NAME}/rectangle_${env.MAJOR_VERSION}.${env.BUILD_NUMBER}.jar"
         sh "java -jar rectangle_${env.MAJOR_VERSION}.${env.BUILD_NUMBER}.jar 3 4"
+=======
+        sh "mkdir -p /var/www/html/rectangle/all/${env.BRANCH_NAME}"
+        sh "cp dist/rectangle_${env.MAJOR_VERSION}.${env.BUILD_NUMBER}.jar /var/www/html/rectangle/all/rectangle_${env.MAJOR_VERSION}.${env.BUILD_NUMBER}.jar"
+>>>>>>> 798146813e58e0372fbc41955e03df371c5bb804
       }
     }
     stage('Promote to Green') {
@@ -83,7 +95,13 @@ pipeline {
         branch 'master'
       }
       steps {
+<<<<<<< HEAD
         sh "cp /var/www/html/rectangles/all/${env.BRANCH_NAME}/rectangle_${env.MAJOR_VERSION}.${env.BUILD_NUMBER}.jar /var/www/html/rectangles/green/rectangle_${env.MAJOR_VERSION}.${env.BUILD_NUMBER}.jar"
+=======
+	sh "cd ~"
+        sh "wget http://bakulgupta1.mylabserver.com/rectangle/all/${env.BRANCH_NAME}/rectangle_${env.MAJOR_VERSION}.${env.BUILD_NUMBER}.jar"
+        sh "java -jar rectangle_${env.MAJOR_VERSION}.${env.BUILD_NUMBER}.jar 4 5"
+>>>>>>> 798146813e58e0372fbc41955e03df371c5bb804
       }
     }
     stage('Promote Development Branch to Master') {
@@ -94,6 +112,7 @@ pipeline {
         branch 'development'
       }
       steps {
+<<<<<<< HEAD
         echo "Stashing Any Local Changes"
         sh 'git stash'
         echo "Checking Out Development Branch"
@@ -108,6 +127,32 @@ pipeline {
         echo 'Tagging the Release'
         sh "git tag rectangle-${env.MAJOR_VERSION}.${env.BUILD_NUMBER}"
         sh "git push origin rectangle-${env.MAJOR_VERSION}.${env.BUILD_NUMBER}"
+=======
+        sh "cp /var/www/html/rectangle/all/${env.BRANCH_NAME}/rectangle_${env.MAJOR_VERSION}.${env.BUILD_NUMBER}.jar /var/www/html/rectangle/green/${env.BRANCH_NAME}"
+      }
+    }
+    stage('Promote development branch to Master') {
+      agent {
+        label 'apache'
+      }
+      when {
+        branch 'Development'
+      }
+      steps {
+      echo "Stashing any local changes"
+      sh 'git stash'
+      echo "Checking out developement branch"
+      sh 'git checkout Development'
+      echo "Checking out Master Branch"
+      sh 'git checkout Master'
+      echo "Merging Development into Master Branch"
+      sh 'git merge Development'
+      echo 'Push to Origin Master'
+      sh 'git push origin master'
+      echo 'Tagging the release'
+      sh "git tag Rectangle-${env.MAJOR_VERSION}.${env.BUILD_NUMBER}"
+      sh "git push origin Rectangle-${env.MAJOR_VERSION}.${env.BUILD_NUMBER}"
+>>>>>>> 798146813e58e0372fbc41955e03df371c5bb804
       }
       post {
         success {
